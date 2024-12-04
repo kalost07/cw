@@ -2,9 +2,9 @@ public class ZooSystem {
     public static void main(String[] args) {
         Zoo zoo = new Zoo();
         zoo.addAnimal1("Julien", "Lemur", 12, "Rainforest", 36, 27);
-        zoo.addAnimal1("Kowalski", "Penguin", 5, "Icy", 24, 16);
-        zoo.addAnimal1("Dave", "Octopus", 14, "Underwater", 50, 23);
-        zoo.addAnimal1("Eva", "Snow Owl", 6, "Forest", 40, 20);
+        zoo.addAnimal2("Kowalski", "Penguin", 5, "Icy", 24, 16);
+        zoo.addAnimal3("Dave", "Octopus", 14, "Underwater", 50, 23);
+        zoo.addAnimal4("Eva", "Snow Owl", 6, "Forest", 40, 20);
 
         Habitat rainforest = new Habitat("Rainforest", 36, 27);
         Habitat ice = new Habitat("Icy", 24, 16);
