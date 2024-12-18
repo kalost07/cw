@@ -72,12 +72,59 @@ class Inventory {
         }
         return res;
     }
-    
-    public static void main(String[] args) {
-        ;
-    }
 }
 
 public class InventoryManagement {
+    public static void main(String[] args) {
+        Inventory inventory = new Inventory();
 
+        JFrame frame = new JFrame("Inventory Management System");
+        frame.setSize(500, 500);
+        frame.setLayout(new GridLayout(3, 3));
+
+        JPanel inputPanel = new JPanel(new FlowLayout());
+        JTextField nameField = new JTextField(10);
+        JTextField priceField = new JTextField(10);
+        JTextField quantityField = new JTextField(10);
+        inputPanel.add(nameField);
+        inputPanel.add(priceField);
+        inputPanel.add(quantityField);
+        frame.add(inputPanel);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton addButton = new JButton("Add Product");
+        JButton updateButton = new JButton("Update Product");
+        JButton displayButton = new JButton("Display Products");
+        buttonPanel.add(addButton);
+        buttonPanel.add(updateButton);
+        buttonPanel.add(displayButton);
+        frame.add(buttonPanel);
+
+        JPanel outputPanel = new JPanel(new FlowLayout());
+        JTextArea outputArea = new JTextArea();
+        outputPanel.add(outputArea);
+        frame.add(outputPanel);
+
+        frame.setVisible(true);
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inventory.addProduct(nameField.getText(), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()));
+            }
+        });
+        updateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                inventory.updateProduct(nameField.getText(), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()));
+            }
+        });
+        displayButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String res = inventory.displayAllProducts();
+                outputArea.setText(res);
+            }
+        });
+    }
 }
