@@ -1,4 +1,7 @@
-import java.util.ArrayList;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 class Product {
     private String name;
@@ -36,35 +39,37 @@ class Product {
     }
 
     public String displayDetails() {
-        return "Name: " + name
-            + "\nPrice: " + price
-            + "\nQuantity: " + quantity + '\n';
+        return name + ", " + price + "$, " + quantity + " in stock.\n";
     }
 }
 
 class Inventory {
-    private static int maxProducts = 3;
+    private static final int maxProducts = 3;
     private int numOfProducts = 0;
     Product[] products = new Product[maxProducts];
 
     public int addProduct(String name, double price, int quantity) {
         if(numOfProducts >= maxProducts) return -1;
+        if(price < 0) return -2;
+        if(quantity < 0) return -3;
         products[numOfProducts] = new Product(name, price, quantity);
         numOfProducts++;
-        return numOfProducts - 1;
+        return numOfProducts;
     }
 
-    public boolean updateProduct(String name, double price, int quantity) {
+    public int updateProduct(String name, double price, int quantity) {
+        if(price < 0) return -2;
+        if(quantity < 0) return -3;
         for(int i = 0; i < numOfProducts; i++) {
             if(!name.equals(products[i].getName())) continue;
-            
+
             products[i].setPrice(price);
             products[i].setQuantity(quantity);
-            return true;
+            return 1;
         }
-        return false;
+        return -1;
     }
-    
+
     public String displayAllProducts() {
         String res = "";
         for(int i = 0; i < numOfProducts; i++) {
@@ -80,7 +85,7 @@ public class InventoryManagement {
 
         JFrame frame = new JFrame("Inventory Management System");
         frame.setSize(500, 500);
-        frame.setLayout(new GridLayout(3, 3));
+        frame.setLayout(new GridLayout(3, 1));
 
         JPanel inputPanel = new JPanel(new FlowLayout());
         JTextField nameField = new JTextField(10);
@@ -110,13 +115,25 @@ public class InventoryManagement {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                inventory.addProduct(nameField.getText(), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()));
+                int res = inventory.addProduct(nameField.getText(), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()));
+                switch(res) {
+                    case -1: outputArea.append("Too many products\n"); break;
+                    case -2: outputArea.append("Price cannot be negative\n"); break;
+                    case -3: outputArea.append("Quantity cannot be negative\n"); break;
+                    default: outputArea.append("Product added successfully\n"); break;
+                }
             }
         });
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                inventory.updateProduct(nameField.getText(), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()));
+                int res = inventory.updateProduct(nameField.getText(), Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()));
+                switch (res) {
+                    case -1: outputArea.append("Product not found\n"); break;
+                    case -2: outputArea.append("Price cannot be negative\n"); break;
+                    case -3: outputArea.append("Quantity cannot be negative\n"); break;
+                    default: outputArea.append("Product updated successfully\n"); break;
+                }
             }
         });
         displayButton.addActionListener(new ActionListener() {
