@@ -30,20 +30,16 @@ class Date{
             case 1: res += "1 year"; break;
             default: res += year + " years";
         }
-        if(year != 0) {
-            if((month == 0) ^ (day == 0)) { // XOR, if only 1 is nonzero we put 'and'
-                res += " and ";
-            }
-            else if(month != 0) { // Both are nonzero
-                res += ", ";
-            }
+        if(year != 0 && month != 0) { // only add punctuation between year and month
+            if(day == 0) res += " and ";
+            else res += ", ";
         }
         switch(month) {
             case 0: break;
             case 1: res += "1 month"; break;
             default: res += month + " months";
         }
-        if((year != 0 || month != 0) && day !=0) res += " and ";
+        if((year != 0 || month != 0) && day !=0) res += " and "; // only add and cuz its the last item
         switch(day) {
             case 0: break;
             case 1: res += "1 day"; break;
@@ -60,19 +56,21 @@ class Date{
     }
     static int daysInMonth(int month, int year) {
         switch(month) {
-            case 0, 2, 4, 6, 7, 9, 11: return 31;
+            case 0, 2, 4, 6, 7, 9, 11, -1: return 31; // -1 is basically December
             case 3, 5, 8, 10: return 30;
             case 1: if(isLeapYear(year)) return 29;
-                    else return 28;
+            else return 28;
             default: return 0;
         }
     }
     public static Date timeDelta(Date a, Date b) {
         // Do b-a
         // Borrowing logic
+        System.out.println("b.month = " + b.month);
+        System.out.println("b.day = " + b.day);
         while (b.day < a.day) {
             b.month--;
-            b.day += b.day + daysInMonth(b.month, b.year);
+            b.day += daysInMonth(b.month, b.year);
         }
         if(b.month < a.month) {
             b.year--;
@@ -86,7 +84,7 @@ class Date{
     }
 }
 
-public class AgeCalculator {
+public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Age Calculator");
         frame.setSize(500,500);
