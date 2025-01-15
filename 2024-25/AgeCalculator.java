@@ -1,5 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalDate.*;
 
 class Date{
     private int year;
@@ -19,6 +23,36 @@ class Date{
     public int getDay() {return day;}
     public void setDay(int day) {this.day = day;}
 
+    public String displayDelta() {
+        String res = "";
+        switch(year) {
+            case 0: break;
+            case 1: res += "1 year"; break;
+            default: res += year + " years";
+        }
+        if(year != 0) {
+            if((month == 0) ^ (day == 0)) { // XOR, if only 1 is nonzero we put 'and'
+                res += " and ";
+            }
+            else if(month != 0) { // Both are nonzero
+                res += ", ";
+            }
+        }
+        switch(month) {
+            case 0: break;
+            case 1: res += "1 month"; break;
+            default: res += month + " months";
+        }
+        if((year != 0 || month != 0) && day !=0) res += " and ";
+        switch(day) {
+            case 0: break;
+            case 1: res += "1 day"; break;
+            default: res += day + " days";
+        }
+        if(res.isEmpty()) return "0 days";
+        return res;
+    }
+
     static boolean isLeapYear(int year) {
         if(year % 4 != 0) return false;
         if(year % 100 == 0 && year % 400 != 0) return false;
@@ -33,7 +67,7 @@ class Date{
             default: return 0;
         }
     }
-    static Date timeDelta(Date a, Date b) {
+    public static Date timeDelta(Date a, Date b) {
         // Do b-a
         // Borrowing logic
         while (b.day < a.day) {
@@ -44,7 +78,7 @@ class Date{
             b.year--;
             b.month += 12;
         }
-        // Substract
+        // Subtract
         int years = b.year - a.year;
         int months = b.month - a.month;
         int days = b.day - a.day;
@@ -55,10 +89,66 @@ class Date{
 public class AgeCalculator {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Age Calculator");
+        frame.setSize(500,500);
         frame.setLayout(new GridLayout(3, 1));
 
         JPanel inputPanel = new JPanel(new FlowLayout());
-        JPanel inputPanel2 = new JPanel(new GridLayout(1, 3));
-        JTextField dayInput = new JTextField(5);
+        JPanel inputPanel2 = new JPanel(new GridLayout(2, 3));
+        JLabel dayLabel = new JLabel("Day");
+        JLabel monthLabel = new JLabel("Month");
+        JLabel yearLabel = new JLabel("Year");
+        JTextField dayInput = new JTextField(10);
+        dayInput.setToolTipText("Day");
+        String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
+        JComboBox<String> monthInput = new JComboBox<String>(months);
+        JTextField yearInput = new JTextField(10);
+        yearInput.setToolTipText("Year");
+        inputPanel2.add(dayLabel);
+        inputPanel2.add(monthLabel);
+        inputPanel2.add(yearLabel);
+        inputPanel2.add(dayInput);
+        inputPanel2.add(monthInput);
+        inputPanel2.add(yearInput);
+        inputPanel.add(inputPanel2);
+        frame.add(inputPanel);
+
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        JButton calcButton = new JButton("Calculate Age");
+        buttonPanel.add(calcButton);
+        frame.add(buttonPanel);
+
+        JPanel outputPanel = new JPanel(new FlowLayout());
+        JLabel outputLabel = new JLabel();
+        outputPanel.add(outputLabel);
+        frame.add(outputPanel);
+
+        frame.setVisible(true);
+
+        calcButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Check if input is numeric
+                if(!dayInput.getText().matches("\\d+") || !yearInput.getText().matches("\\d+")) {
+                    outputLabel.setText("Input positive integers only");
+                    return;
+                }
+                int day = Integer.parseInt(dayInput.getText());
+                int month = monthInput.getSelectedIndex();
+                int year = Integer.parseInt(yearInput.getText());
+                // Check if day is valid
+                if(day > Date.daysInMonth(month, year)) {
+                    outputLabel.setText("Invalid day");
+                    return;
+                }
+                // Create Dates
+                LocalDate ltoday = LocalDate.now();
+                Date today = new Date(ltoday.getYear(), ltoday.getMonth().getValue() - 1, ltoday.getDayOfMonth());
+                Date bday = new Date(year, month, day);
+                // Mathing
+                Date delta = Date.timeDelta(bday, today);
+                if(delta.getYear() < 0) outputLabel.setText("Input a date in the past");
+                else outputLabel.setText("You are " + delta.displayDelta() + " old.");
+            }
+        });
     }
 }
