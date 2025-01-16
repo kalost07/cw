@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.LocalDate.*;
 
 class Date{
     private int year;
@@ -66,8 +65,6 @@ class Date{
     public static Date timeDelta(Date a, Date b) {
         // Do b-a
         // Borrowing logic
-        System.out.println("b.month = " + b.month);
-        System.out.println("b.day = " + b.day);
         while (b.day < a.day) {
             b.month--;
             b.day += daysInMonth(b.month, b.year);
@@ -87,7 +84,7 @@ class Date{
 public class Main {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Age Calculator");
-        frame.setSize(500,500);
+        frame.setSize(400,400);
         frame.setLayout(new GridLayout(3, 1));
 
         JPanel inputPanel = new JPanel(new FlowLayout());
@@ -96,11 +93,9 @@ public class Main {
         JLabel monthLabel = new JLabel("Month");
         JLabel yearLabel = new JLabel("Year");
         JTextField dayInput = new JTextField(10);
-        dayInput.setToolTipText("Day");
         String[] months = {"January","February","March","April","May","June","July","August","September","October","November","December"};
         JComboBox<String> monthInput = new JComboBox<String>(months);
         JTextField yearInput = new JTextField(10);
-        yearInput.setToolTipText("Year");
         inputPanel2.add(dayLabel);
         inputPanel2.add(monthLabel);
         inputPanel2.add(yearLabel);
@@ -112,6 +107,9 @@ public class Main {
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton calcButton = new JButton("Calculate Age");
+        calcButton.setBackground(new Color(0x17984A));
+        calcButton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+        calcButton.setForeground(Color.WHITE);
         buttonPanel.add(calcButton);
         frame.add(buttonPanel);
 
@@ -130,6 +128,7 @@ public class Main {
                     outputLabel.setText("Input positive integers only");
                     return;
                 }
+                // Get Data
                 int day = Integer.parseInt(dayInput.getText());
                 int month = monthInput.getSelectedIndex();
                 int year = Integer.parseInt(yearInput.getText());
