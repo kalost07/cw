@@ -81,7 +81,7 @@ class Date{
     }
 }
 
-public class Main {
+public class AgeCalculator {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Age Calculator");
         frame.setSize(400,400);
@@ -107,7 +107,7 @@ public class Main {
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         JButton calcButton = new JButton("Calculate Age");
-        calcButton.setBackground(new Color(0x17984A));
+        calcButton.setBackground(new Color(0x1AC45F));
         calcButton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
         calcButton.setForeground(Color.WHITE);
         buttonPanel.add(calcButton);
@@ -133,7 +133,7 @@ public class Main {
                 int month = monthInput.getSelectedIndex();
                 int year = Integer.parseInt(yearInput.getText());
                 // Check if day is valid
-                if(day > Date.daysInMonth(month, year)) {
+                if(day > Date.daysInMonth(month, year) || day <= 0) {
                     outputLabel.setText("Invalid day");
                     return;
                 }
