@@ -18,15 +18,15 @@ public class Vending {
         while(true) {
             if(selection == -1) System.out.println("Selected: Nothing");
             else System.out.println("Selected: " + names[selection]);
-            System.out.println("Money: " + String.format("%.2f", money));
+            System.out.printf("Money: %.2f$\n", money);
             switch(read.nextInt()) {
                 case 1:
                     selection = read.nextInt();
                     if(selection < 0 || selection >= names.length)
                         selection = -1;
                     if(tryPurchase(selection, money, prices)) {
-                        System.out.println("Bought a " + names[selection] + " for " + String.format("%.2f", prices[selection]));
-                        System.out.println("Returned " + String.format("%.2f", money - prices[selection]) + " in change");
+                        System.out.printf("Bought a %s for %.2f$\n", names[selection], prices[selection]);
+                        System.out.printf("Returned %.2f$ in change\n", money - prices[selection]);
                         money = 0;
                         selection = -1;
                     }
@@ -35,8 +35,8 @@ public class Vending {
                     double add = read.nextDouble();
                     if(add > 0) money += add;
                     if(tryPurchase(selection, money, prices)) {
-                        System.out.println("Bought a " + names[selection] + " for " + String.format("%.2f", prices[selection]));
-                        System.out.println("Returned " + String.format("%.2f", money - prices[selection]) + " in change");
+                        System.out.printf("Bought a %s for %.2f$\n", names[selection], prices[selection]);
+                        System.out.printf("Returned %.2f$ in change\n", money - prices[selection]);
                         money = 0;
                         selection = -1;
                     }
@@ -51,7 +51,7 @@ public class Vending {
     }
     static void display(String[] names, double[] prices, int[] quantity) {
         for(int i = 0; i < names.length; i++) {
-            System.out.println(names[i] + ", " + String.format("%.2f", prices[i]) + "$, " + quantity[i] + " in stock, code: " + i);
+            System.out.printf("%s, %.2f$, %d in stock, code: %d\n", names[i], prices[i], quantity[i], i);
         }
     }
     static boolean tryPurchase(int selection, double money, double[] prices) {
