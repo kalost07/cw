@@ -3,7 +3,6 @@ import java.util.Scanner;
 public class Vending {
     public static void main(String[] args) {
         Scanner read = new Scanner(System.in);
-
         String[] names = {"Water","Coke","Monster","Chips","Chocolate","Croissant"};
         double[] prices = {0.80, 1.70, 2.00, 3.60, 3.00, 2.00};
         int[] quantity = {15, 10, 10, 8, 8, 8};
@@ -19,15 +18,15 @@ public class Vending {
         while(true) {
             if(selection == -1) System.out.println("Selected: Nothing");
             else System.out.println("Selected: " + names[selection]);
-            System.out.println("Money: " + money);
+            System.out.println("Money: " + String.format("%.2f", money));
             switch(read.nextInt()) {
                 case 1:
                     selection = read.nextInt();
                     if(selection < 0 || selection >= names.length)
                         selection = -1;
                     if(tryPurchase(selection, money, prices)) {
-                        System.out.println("Bought a " + names[selection] + " for " + prices[selection] + '$');
-                        System.out.println("Returned " + (money - prices[selection]) + "$ in change");
+                        System.out.println("Bought a " + names[selection] + " for " + String.format("%.2f", prices[selection]));
+                        System.out.println("Returned " + String.format("%.2f", money - prices[selection]) + " in change");
                         money = 0;
                         selection = -1;
                     }
@@ -36,8 +35,8 @@ public class Vending {
                     double add = read.nextDouble();
                     if(add > 0) money += add;
                     if(tryPurchase(selection, money, prices)) {
-                        System.out.println("Bought a " + names[selection] + " for " + prices[selection]);
-                        System.out.println("Returned " + (money - prices[selection]) + " in change");
+                        System.out.println("Bought a " + names[selection] + " for " + String.format("%.2f", prices[selection]));
+                        System.out.println("Returned " + String.format("%.2f", money - prices[selection]) + " in change");
                         money = 0;
                         selection = -1;
                     }
@@ -52,7 +51,7 @@ public class Vending {
     }
     static void display(String[] names, double[] prices, int[] quantity) {
         for(int i = 0; i < names.length; i++) {
-            System.out.println(names[i] + ", " + prices[i] + "$, " + quantity[i] + " in stock, code: " + i);
+            System.out.println(names[i] + ", " + String.format("%.2f", prices[i]) + "$, " + quantity[i] + " in stock, code: " + i);
         }
     }
     static boolean tryPurchase(int selection, double money, double[] prices) {
