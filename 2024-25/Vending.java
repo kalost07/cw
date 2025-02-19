@@ -28,6 +28,7 @@ public class Vending {
                         System.out.printf("Bought a %s for %.2f$\n", names[selection], prices[selection]);
                         System.out.printf("Returned %.2f$ in change\n", money - prices[selection]);
                         money = 0;
+                        quantity[selection]--;
                         selection = -1;
                     }
                     break;
@@ -38,6 +39,7 @@ public class Vending {
                         System.out.printf("Bought a %s for %.2f$\n", names[selection], prices[selection]);
                         System.out.printf("Returned %.2f$ in change\n", money - prices[selection]);
                         money = 0;
+                        quantity[selection]--;
                         selection = -1;
                     }
                     break;
