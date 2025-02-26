@@ -59,7 +59,7 @@ public class Main {
         do{
             System.out.print("Enter valid book number: ");
             num = scanner.nextInt();
-        } while(num >= 0 && num < books.length && books[num].getBorrowerName() != null);
+        } while(!(num >= 0 && num < books.length && books[num].getBorrowerName() == null));
         System.out.print("Enter borrower name: ");
         scanner.nextLine();
         books[num].borrowBook(scanner.nextLine());
