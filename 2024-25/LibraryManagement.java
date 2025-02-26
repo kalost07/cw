@@ -31,7 +31,7 @@ public class Main {
                     read.nextLine();
                     int index = findBookByTitle(bookArray, read.nextLine());
                     if(index == -1) System.out.println("Book not found");
-                    else System.out.println(bookArray[index].getDetails());
+                    else System.out.printf("Book %d: %s\n", index, bookArray[index].getDetails());
                     break;
                 case 3:
                     borrowBook(bookArray, read);
