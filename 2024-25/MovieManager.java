@@ -1,41 +1,36 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
+import java.awt.event.*;
 import java.util.*;
 
 public class Main {
     static int numMovies = 0;
+    static boolean sortByGenre = false;
     public static void main(String[] args) {
         Movie[] movies = new Movie[10];
 
 
         JFrame frame = new JFrame("Movie Collection Manager");
         frame.setSize(400,400);
-        frame.setLayout(new GridLayout(3,1));
+        frame.setLayout(new BorderLayout());
+
+        JPanel northPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
 
         JTextField searchBar = new JTextField(20);
-        searchBar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // search func
-                Movie[] filteredMovies = new Movie[10];
-                int n = 0;
-                if(searchBar.getText().isEmpty()) filteredMovies = Arrays.copyOf(movies, movies.length);
-                else {
-                    for(int i = 0; i < numMovies; i++) {
-                        if(movies[i].getTitle().toLowerCase().contains(searchBar.getText().toLowerCase())) {
-                            filteredMovies[n] = new Movie(movies[i]);
-                            n++;
-                        }
-                    }
-                }
-                updateTable(filteredMovies, table, n);
-            }
-        });
-        frame.add(searchBar);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
+        northPanel.add(searchBar, gbc);
+
+        JComboBox<String> sortOption = new JComboBox<>(new String[]{"Title", "Genre"});
+        gbc.gridy = 1;
+        northPanel.add(sortOption, gbc);
+
+        frame.add(northPanel, BorderLayout.NORTH);
+
 
         JTable table = new JTable(new DefaultTableModel(11, 2) {
             // Override isCellEditable to disable user editing
@@ -48,11 +43,10 @@ public class Main {
         table.getColumnModel().getColumn(1).setPreferredWidth(100);
         table.setValueAt("Title", 0, 0);
         table.setValueAt("Genre", 0, 1);
-
-        frame.add(table);
+        frame.add(table, BorderLayout.CENTER);
 
         JButton addMovieButton = new JButton("Add movie");
-        frame.add(addMovieButton);
+        frame.add(addMovieButton, BorderLayout.SOUTH);
 
         addMovieButton.addActionListener(new ActionListener() {
             @Override
@@ -79,8 +73,42 @@ public class Main {
                         movies[numMovies] = new Movie(title, genre);
                         numMovies++;
                     }
+                    sortMovies(movies);
                     updateTable(movies, table, numMovies);
                     return;
+                }
+            }
+        });
+        searchBar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // search func
+                Movie[] filteredMovies = new Movie[10];
+                int n = 0;
+                if(searchBar.getText().isEmpty()) filteredMovies = Arrays.copyOf(movies, movies.length);
+                else {
+                    for(int i = 0; i < numMovies; i++) {
+                        if(movies[i].getTitle().toLowerCase().contains(searchBar.getText().toLowerCase().strip())) {
+                            filteredMovies[n] = new Movie(movies[i]);
+                            n++;
+                        }
+                    }
+                }
+                updateTable(filteredMovies, table, n);
+            }
+        });
+        sortOption.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                // Check if the selected item has changed
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    // Get the selected item
+                    boolean selectedGenre = ((String) e.getItem()).equals("Genre");
+                    if(sortByGenre != selectedGenre) {
+                        sortByGenre = selectedGenre;
+                        sortMovies(movies);
+                        updateTable(movies, table, numMovies);
+                    }
                 }
             }
         });
@@ -92,8 +120,9 @@ public class Main {
             table.setValueAt(movies[i].getTitle(), i + 1, 0);
             table.setValueAt(movies[i].getGenre(), i + 1, 1);
         }
+        System.out.println("update");
     }
-    static void sortMovies(Movie[] movies, boolean genre) {
+    static void sortMovies(Movie[] movies) {
         Comparator<Movie> compTitle = new Comparator<Movie>() {
             @Override
             public int compare(Movie o1, Movie o2) {
@@ -103,12 +132,15 @@ public class Main {
         Comparator<Movie> compGenre = new Comparator<Movie>() {
             @Override
             public int compare(Movie o1, Movie o2) {
-                return o1.getGenre().compareTo(o2.getGenre());
+                int res = o1.getGenre().compareTo(o2.getGenre());
+                if(res != 0) return res;
+                return o1.getTitle().compareTo(o2.getTitle());
             }
         };
-        if(!genre) Arrays.sort(movies, 0, numMovies, compTitle);
+        if(!sortByGenre) Arrays.sort(movies, 0, numMovies, compTitle);
         else Arrays.sort(movies, 0, numMovies, compGenre);
     }
+
 }
 
 class Movie {
@@ -123,7 +155,7 @@ class Movie {
         this.title = movie.title;
         this.genre = movie.genre;
     }
-    
+
 
     public String getTitle() {
         return title;
