@@ -84,11 +84,13 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 // search func
                 Movie[] filteredMovies = new Movie[10];
-                int n = 0;
+                int n = numMovies;
                 if(searchBar.getText().isEmpty()) filteredMovies = Arrays.copyOf(movies, movies.length);
                 else {
+                    n = 0;
                     for(int i = 0; i < numMovies; i++) {
                         if(movies[i].getTitle().toLowerCase().contains(searchBar.getText().toLowerCase().strip())) {
+                            System.out.println("match " + movies[i].getTitle());
                             filteredMovies[n] = new Movie(movies[i]);
                             n++;
                         }
@@ -116,6 +118,10 @@ public class Main {
         frame.setVisible(true);
     }
     static void updateTable(Movie[] movies, JTable table, int n) {
+        for(int i = 0; i < movies.length; i++) {
+            table.setValueAt("", i + 1, 0);
+            table.setValueAt("", i + 1, 1);
+        }
         for(int i = 0; i < n; i++) {
             table.setValueAt(movies[i].getTitle(), i + 1, 0);
             table.setValueAt(movies[i].getGenre(), i + 1, 1);
